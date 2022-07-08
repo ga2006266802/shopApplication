@@ -67,6 +67,7 @@ namespace shopSystem
             if (Columns == 3)
             {
                 listView.Columns.Add(/*"num",*/"¼Æ¶q", -2);
+                listView.MultiSelect = false;
             }
             else
             {
