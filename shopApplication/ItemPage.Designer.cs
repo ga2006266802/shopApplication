@@ -1,6 +1,6 @@
-﻿namespace shopSystem
+﻿namespace shopApplication
 {
-    partial class AddItemPage
+    partial class ItemPage
     {
         /// <summary>
         /// Required designer variable.
@@ -36,13 +36,14 @@
             this.itemName = new System.Windows.Forms.TextBox();
             this.itemAmount = new System.Windows.Forms.NumericUpDown();
             this.itemPrice = new System.Windows.Forms.NumericUpDown();
+            this.numLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.itemAmount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.itemPrice)).BeginInit();
             this.SuspendLayout();
             // 
             // AcceptButton
             // 
-            this.AcceptButton.Location = new System.Drawing.Point(175, 379);
+            this.AcceptButton.Location = new System.Drawing.Point(502, 392);
             this.AcceptButton.Name = "AcceptButton";
             this.AcceptButton.Size = new System.Drawing.Size(150, 46);
             this.AcceptButton.TabIndex = 0;
@@ -52,7 +53,7 @@
             // 
             // CaneclButton
             // 
-            this.CaneclButton.Location = new System.Drawing.Point(507, 379);
+            this.CaneclButton.Location = new System.Drawing.Point(141, 392);
             this.CaneclButton.Name = "CaneclButton";
             this.CaneclButton.Size = new System.Drawing.Size(150, 46);
             this.CaneclButton.TabIndex = 1;
@@ -93,6 +94,7 @@
             this.itemName.Name = "itemName";
             this.itemName.Size = new System.Drawing.Size(200, 38);
             this.itemName.TabIndex = 5;
+            this.itemName.TextChanged += new System.EventHandler(TextBox_func.textChange);
             // 
             // itemAmount
             // 
@@ -108,12 +110,22 @@
             this.itemPrice.Size = new System.Drawing.Size(240, 38);
             this.itemPrice.TabIndex = 9;
             // 
-            // AddItemPage
+            // numLabel
+            // 
+            this.numLabel.AutoSize = true;
+            this.numLabel.Location = new System.Drawing.Point(509, 228);
+            this.numLabel.Name = "numLabel";
+            this.numLabel.Size = new System.Drawing.Size(81, 30);
+            this.numLabel.TabIndex = 10;
+            this.numLabel.Text = "label4";
+            // 
+            // ItemPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(14F, 30F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.CaneclButton;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.numLabel);
             this.Controls.Add(this.itemPrice);
             this.Controls.Add(this.itemAmount);
             this.Controls.Add(this.itemName);
@@ -122,7 +134,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.CaneclButton);
             this.Controls.Add(this.AcceptButton);
-            this.Name = "AddItemPage";
+            this.Name = "ItemPage";
             this.Text = "AddNewPage";
             ((System.ComponentModel.ISupportInitialize)(this.itemAmount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.itemPrice)).EndInit();
@@ -141,5 +153,6 @@
         private TextBox itemName;
         private NumericUpDown itemAmount;
         private NumericUpDown itemPrice;
+        private Label numLabel;
     }
 }

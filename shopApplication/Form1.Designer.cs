@@ -1,4 +1,4 @@
-﻿namespace shopSystem
+﻿namespace shopApplication
 {
     partial class Form1
     {
@@ -35,6 +35,8 @@
             this.totalTextBox = new System.Windows.Forms.TextBox();
             this.addNewItemBtn = new System.Windows.Forms.Button();
             this.clearButton = new System.Windows.Forms.Button();
+            this.newOrderBtn = new System.Windows.Forms.Button();
+            this.editBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // itemListView
@@ -54,6 +56,7 @@
             this.orderListView.Size = new System.Drawing.Size(700, 650);
             this.orderListView.TabIndex = 1;
             this.orderListView.UseCompatibleStateImageBehavior = false;
+            this.orderListView.DoubleClick += new System.EventHandler(this.useItemPage);
             // 
             // searchTextBox
             // 
@@ -74,6 +77,7 @@
             // 
             // totalTextBox
             // 
+            this.totalTextBox.Enabled = false;
             this.totalTextBox.Location = new System.Drawing.Point(935, 672);
             this.totalTextBox.Name = "totalTextBox";
             this.totalTextBox.Size = new System.Drawing.Size(627, 38);
@@ -88,7 +92,7 @@
             this.addNewItemBtn.TabIndex = 5;
             this.addNewItemBtn.Text = "新增項目";
             this.addNewItemBtn.UseVisualStyleBackColor = true;
-            this.addNewItemBtn.Click += new System.EventHandler(this.addNewItemBtn_Click);
+            this.addNewItemBtn.Click += new System.EventHandler(this.useItemPage);
             // 
             // clearButton
             // 
@@ -100,11 +104,33 @@
             this.clearButton.UseVisualStyleBackColor = true;
             this.clearButton.Click += new System.EventHandler(this.clearButton_Click);
             // 
+            // newOrderBtn
+            // 
+            this.newOrderBtn.Location = new System.Drawing.Point(862, 720);
+            this.newOrderBtn.Name = "newOrderBtn";
+            this.newOrderBtn.Size = new System.Drawing.Size(150, 46);
+            this.newOrderBtn.TabIndex = 7;
+            this.newOrderBtn.Text = "新增訂單";
+            this.newOrderBtn.UseVisualStyleBackColor = true;
+            this.newOrderBtn.Click += new System.EventHandler(this.newOrderBtn_Click);
+            // 
+            // editBtn
+            // 
+            this.editBtn.Location = new System.Drawing.Point(168, 716);
+            this.editBtn.Name = "editBtn";
+            this.editBtn.Size = new System.Drawing.Size(150, 46);
+            this.editBtn.TabIndex = 8;
+            this.editBtn.Text = "編輯項目";
+            this.editBtn.UseVisualStyleBackColor = true;
+            this.editBtn.Click += new System.EventHandler(this.useItemPage);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(14F, 30F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1574, 829);
+            this.ClientSize = new System.Drawing.Size(1574, 778);
+            this.Controls.Add(this.editBtn);
+            this.Controls.Add(this.newOrderBtn);
             this.Controls.Add(this.clearButton);
             this.Controls.Add(this.addNewItemBtn);
             this.Controls.Add(this.totalTextBox);
@@ -127,5 +153,7 @@
         private Label label1;
         private TextBox totalTextBox;
         private Button addNewItemBtn;
+        private Button newOrderBtn;
+        private Button editBtn;
     }
 }

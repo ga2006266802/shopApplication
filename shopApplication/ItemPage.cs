@@ -9,18 +9,45 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 
-namespace shopSystem
+namespace shopApplication
 {
-    public partial class AddItemPage : Form
+    public partial class ItemPage : Form
     {
         Item Item = new Item();
         List<Item> itemList = new List<Item>();
-        public AddItemPage(Item itemTemp, List<Item> listTemp)
+
+        public ItemPage(Item itemTemp, List<Item> listTemp)
         {
             InitializeComponent();
             this.Text = "新增商品";
             this.Item = itemTemp;
             this.itemList = listTemp;
+            numLabel.Visible = false;
+        }
+
+        public ItemPage(Item itemTemp)
+        {
+            InitializeComponent();
+            this.Text = "編輯商品";
+            numLabel.Visible = false;
+            itemName.Text = itemTemp.name;
+            itemAmount.Value = itemTemp.amount;
+            itemPrice.Value = itemTemp.price;
+            this.Item = itemTemp;
+        }
+
+        public ItemPage(Item itemTemp, Item orderTemp)
+        {
+            InitializeComponent();
+            this.Text = "編輯商品";
+            this.Item = orderTemp;
+            itemName.Text = itemTemp.name;
+            itemName.Enabled = false;
+            itemPrice.Value = itemTemp.price;
+            itemPrice.Enabled = false;
+            itemAmount.Value = orderTemp.amount;
+            itemAmount.Maximum = itemTemp.amount;
+            numLabel.Text = $"最大:{itemTemp.amount}";
         }
 
         private void CaneclButton_Click(object sender, EventArgs e)
@@ -30,9 +57,9 @@ namespace shopSystem
 
         private void AcceptButton_Click(object sender, EventArgs e)
         {
-            if (itemName.Text.Replace(" ", "").Length == 0 ||
-                itemPrice.Text.Replace(" ", "").Length == 0 ||
-                itemAmount.Text.Replace(" ", "").Length == 0)
+            if ( string.IsNullOrEmpty(itemName.Text.Replace(" ", "")) ||
+                string.IsNullOrEmpty(itemPrice.Text.Replace(" ", "")) ||
+                string.IsNullOrEmpty(itemAmount.Text.Replace(" ", "")))
             {
                 MessageBox.Show("有欄位空白", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -46,7 +73,6 @@ namespace shopSystem
                         return;
                     }
                 }
-
 
                 Item.name = itemName.Text;
                 Item.price = int.Parse(itemPrice.Text);

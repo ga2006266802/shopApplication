@@ -1,4 +1,4 @@
-using shopSystem;
+using shopApplication;
 
 namespace shopApplication
 {
