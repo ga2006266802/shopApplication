@@ -34,9 +34,10 @@
             this.label1 = new System.Windows.Forms.Label();
             this.totalTextBox = new System.Windows.Forms.TextBox();
             this.addNewItemBtn = new System.Windows.Forms.Button();
-            this.clearButton = new System.Windows.Forms.Button();
+            this.clearBtn = new System.Windows.Forms.Button();
             this.newOrderBtn = new System.Windows.Forms.Button();
             this.editBtn = new System.Windows.Forms.Button();
+            this.settingBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // itemListView
@@ -94,15 +95,15 @@
             this.addNewItemBtn.UseVisualStyleBackColor = true;
             this.addNewItemBtn.Click += new System.EventHandler(this.useItemPage);
             // 
-            // clearButton
+            // clearBtn
             // 
-            this.clearButton.Location = new System.Drawing.Point(1412, 720);
-            this.clearButton.Name = "clearButton";
-            this.clearButton.Size = new System.Drawing.Size(150, 46);
-            this.clearButton.TabIndex = 6;
-            this.clearButton.Text = "清除";
-            this.clearButton.UseVisualStyleBackColor = true;
-            this.clearButton.Click += new System.EventHandler(this.clearButton_Click);
+            this.clearBtn.Location = new System.Drawing.Point(1412, 720);
+            this.clearBtn.Name = "clearBtn";
+            this.clearBtn.Size = new System.Drawing.Size(150, 46);
+            this.clearBtn.TabIndex = 6;
+            this.clearBtn.Text = "清除";
+            this.clearBtn.UseVisualStyleBackColor = true;
+            this.clearBtn.Click += new System.EventHandler(this.clearButton_Click);
             // 
             // newOrderBtn
             // 
@@ -124,14 +125,25 @@
             this.editBtn.UseVisualStyleBackColor = true;
             this.editBtn.Click += new System.EventHandler(this.useItemPage);
             // 
+            // settingBtn
+            // 
+            this.settingBtn.Location = new System.Drawing.Point(562, 716);
+            this.settingBtn.Name = "settingBtn";
+            this.settingBtn.Size = new System.Drawing.Size(150, 46);
+            this.settingBtn.TabIndex = 9;
+            this.settingBtn.Text = "軟體設定";
+            this.settingBtn.UseVisualStyleBackColor = true;
+            this.settingBtn.Click += new System.EventHandler(this.settingBtn_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(14F, 30F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1574, 778);
+            this.Controls.Add(this.settingBtn);
             this.Controls.Add(this.editBtn);
             this.Controls.Add(this.newOrderBtn);
-            this.Controls.Add(this.clearButton);
+            this.Controls.Add(this.clearBtn);
             this.Controls.Add(this.addNewItemBtn);
             this.Controls.Add(this.totalTextBox);
             this.Controls.Add(this.label1);
@@ -155,5 +167,7 @@
         private Button addNewItemBtn;
         private Button newOrderBtn;
         private Button editBtn;
+        private Button settingBtn;
+        private Button clearBtn;
     }
 }

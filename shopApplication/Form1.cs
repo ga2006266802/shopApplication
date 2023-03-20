@@ -1,14 +1,18 @@
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Collections;
 
 namespace shopApplication
 {
     public partial class Form1 : Form
     {
-        private Button clearButton;
+        
+        
         List<Item> itemList = new List<Item>(); //存放所有商品
         List<Item> orderList = new List<Item>(); //存放選購商品
+        SetData setData = new SetData();
+
         public Form1()
         {
             InitializeComponent();
@@ -21,12 +25,18 @@ namespace shopApplication
             if (Directory.Exists(FileName.mainDirectoryPath)) //檢查存檔資料夾是否存在
             {
                 string path = FileName.mainDirectoryPath + '/' + FileName.productsTxtPath;
-                if (File.Exists(path)) //檢查商品目錄是否存在
+                string json;
+
+                if ( (json = File_func.read_json_file(path))!= "" )
                 {
-                    string json;
-                    json = File.ReadAllText(path);
                     itemList = System.Text.Json.JsonSerializer.Deserialize<List<Item>>(json);
-                    item_func.add_all_item_to_ListViwe(itemListView,itemList,null);
+                    item_func.add_all_item_to_ListViwe(itemListView, itemList, null);
+                }
+
+                path = FileName.mainDirectoryPath + '/' + FileName.setTxtPath;
+                if( (json = File_func.read_json_file(path))!="")
+                {
+                    setData = System.Text.Json.JsonSerializer.Deserialize<SetData>(json);
                 }
             }
             else
@@ -94,14 +104,9 @@ namespace shopApplication
                         break;
                 }
 
-                var option = new System.Text.Json.JsonSerializerOptions
-                {
-                    WriteIndented = true,//不要擠在一團
-                    Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,//不要存成科學符號
-                };
-
-                string json = System.Text.Json.JsonSerializer.Serialize(itemList, option);
-                File.WriteAllText(FileName.mainDirectoryPath + '/' + FileName.productsTxtPath, json);
+                string json = System.Text.Json.JsonSerializer.Serialize(itemList, File_func.option);
+                string path = FileName.mainDirectoryPath + '/' + FileName.productsTxtPath;
+                File_func.save_text_file(path,json);
             }
 
         }
@@ -109,12 +114,23 @@ namespace shopApplication
         private void newOrderBtn_Click(object sender, EventArgs e)
         {
             DialogResult result;
-            NewOrderPage newOrderPage = new NewOrderPage(orderListView,totalTextBox.Text);
+            NewOrderPage newOrderPage = new NewOrderPage(orderListView,totalTextBox.Text,setData);
             result = newOrderPage.ShowDialog();
 
             if (result == DialogResult.OK)
             {
+                for (int i = 0; i < orderListView.Items.Count ; i++)
+                {
+                    int index = item_func.find_item_index(itemList, orderListView.Items[i].SubItems[0].Text); //找到在list中的位置
+                    itemList[index].amount = itemList[index].amount - int.Parse(orderListView.Items[i].SubItems[orderListView.Columns["num"].Index].Text); //扣掉賣出數量
 
+                    string json = System.Text.Json.JsonSerializer.Serialize(itemList, File_func.option);
+                    string path = FileName.mainDirectoryPath + '/' + FileName.productsTxtPath;
+                    File_func.save_text_file(path, json); //存檔
+
+                    itemListView.Items.Clear();
+                    item_func.add_all_item_to_ListViwe(itemListView, itemList, null); //更新顯示數據
+                }
             }
 
         }
@@ -180,6 +196,14 @@ namespace shopApplication
             orderList.Clear();
         }
 
+        private void settingBtn_Click(object sender, EventArgs e)
+        {
+            SettingPage settingPage = new SettingPage(setData);
+            settingPage.ShowDialog();
+
+            Debug.WriteLine(setData.shopName);
+        }
+
         private void orderListView_SelectedIndexChanged(object sender, EventArgs e)
         {
             Debug.WriteLine(itemListView.SelectedItems.Count);
@@ -204,10 +228,39 @@ public class Item
     public int amount { get; set; }
 }
 
-static class FileName
+public static class FileName
 {
     public const string mainDirectoryPath = @"saved";
     public const string productsTxtPath = @"product.txt";
+    public const string customersDirectoryPath = @"customers";
+    public const string customersTxtPath = @"customers.txt";
+    public const string setTxtPath = @"set.txt";
+}
+
+public class File_func
+{
+    public static string read_json_file(string path)
+    {
+        string json = "";
+
+        if (File.Exists(path)) //檢查商品目錄是否存在
+        {
+            json = File.ReadAllText(path);
+        }
+
+        return json;
+    }
+
+    public static void save_text_file(string path, string json)
+    {
+        File.WriteAllText(path, json);
+    }
+
+    public static System.Text.Json.JsonSerializerOptions option = new System.Text.Json.JsonSerializerOptions
+    {
+        WriteIndented = true,//不要擠在一團
+        Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,//不要存成科學符號
+    };
 }
 
 public class TextBox_func
@@ -248,7 +301,7 @@ public class ListView_func
         }
         else
         {
-            listView.Columns.Add(/*"num",*/"數量", width);
+            listView.Columns.Add("num","數量", width);
             listView.Columns.Add(/*"num",*/"價格", -2);
         }
 
@@ -290,7 +343,7 @@ public class item_func
     {
         foreach (Item item in itemList)
         {
-            ListView_func.listView_add_item(item, listView, textBox);            
+            ListView_func.listView_add_item(item, listView, textBox);
         }
     }
 
@@ -298,7 +351,7 @@ public class item_func
     {
         int index = 0;
 
-        foreach (Item item in itemList)
+        foreach (Item item in itemList )
         {
             if (item.name.Equals(text))
             {

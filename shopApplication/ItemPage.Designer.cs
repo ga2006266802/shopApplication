@@ -92,28 +92,37 @@
             // 
             this.itemName.Location = new System.Drawing.Point(263, 35);
             this.itemName.Name = "itemName";
-            this.itemName.Size = new System.Drawing.Size(200, 38);
+            this.itemName.Size = new System.Drawing.Size(403, 38);
             this.itemName.TabIndex = 5;
-            this.itemName.TextChanged += new System.EventHandler(TextBox_func.textChange);
             // 
             // itemAmount
             // 
             this.itemAmount.Location = new System.Drawing.Point(263, 226);
+            this.itemAmount.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
             this.itemAmount.Name = "itemAmount";
-            this.itemAmount.Size = new System.Drawing.Size(240, 38);
+            this.itemAmount.Size = new System.Drawing.Size(443, 38);
             this.itemAmount.TabIndex = 8;
             // 
             // itemPrice
             // 
             this.itemPrice.Location = new System.Drawing.Point(263, 132);
+            this.itemPrice.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
             this.itemPrice.Name = "itemPrice";
-            this.itemPrice.Size = new System.Drawing.Size(240, 38);
+            this.itemPrice.Size = new System.Drawing.Size(443, 38);
             this.itemPrice.TabIndex = 9;
             // 
             // numLabel
             // 
             this.numLabel.AutoSize = true;
-            this.numLabel.Location = new System.Drawing.Point(509, 228);
+            this.numLabel.Location = new System.Drawing.Point(263, 267);
             this.numLabel.Name = "numLabel";
             this.numLabel.Size = new System.Drawing.Size(81, 30);
             this.numLabel.TabIndex = 10;
