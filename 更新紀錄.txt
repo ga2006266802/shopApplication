@@ -1,0 +1,23 @@
+2023/05/16
+
+1.更新介面 將部分文字放大方便識別
+
+2.更新軟體設定選項
+新增:商店名稱、商店地址、電話、傳真
+
+3.更新訂單產出功能
+訂單產出介面和內容由程式資料夾的orderExample決定
+可由使用者自行調整
+
+以下內容由軟體自動帶入 (x為第幾項)
+
+<shopName> : 商店名稱
+<address> : 商店地址
+<phoneNumber> : 電話
+<faxNumber> : 傳真
+<orderTime> : 訂單生成時間
+<item x> : 單項產品名稱
+<itemNum x> : 單項產品數量
+<itemPrice x> : 產品單件價格
+<itemTotelPrice x> : 此次單項產品總價
+<amount> : 訂單總價
