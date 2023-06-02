@@ -7,8 +7,8 @@ namespace shopApplication
 {
     public partial class Form1 : Form
     {
-        
-        
+
+
         List<Item> itemList = new List<Item>(); //存放所有商品
         List<Item> orderList = new List<Item>(); //存放選購商品
         SetData setData = new SetData();
@@ -27,14 +27,14 @@ namespace shopApplication
                 string path = FileName.mainDirectoryPath + '/' + FileName.productsTxtPath;
                 string json;
 
-                if ( (json = File_func.read_json_file(path))!= "" )
+                if ((json = File_func.read_json_file(path)) != "")
                 {
                     itemList = System.Text.Json.JsonSerializer.Deserialize<List<Item>>(json);
                     item_func.add_all_item_to_ListViwe(itemListView, itemList, null);
                 }
 
                 path = FileName.mainDirectoryPath + '/' + FileName.setTxtPath;
-                if( (json = File_func.read_json_file(path))!="")
+                if ((json = File_func.read_json_file(path)) != "")
                 {
                     setData = System.Text.Json.JsonSerializer.Deserialize<SetData>(json);
                 }
@@ -53,7 +53,7 @@ namespace shopApplication
 
             String name;
 
-            if(sender.GetType().Name == "Button" )
+            if (sender.GetType().Name == "Button")
             {
                 name = ((Button)sender).Name;
             }
@@ -82,6 +82,7 @@ namespace shopApplication
                     Item orderTemp = new Item();
                     orderTemp = orderList[item_func.find_item_index(orderList, orderListView.SelectedItems[0].Text)];
                     itemPage = new ItemPage(itemTemp, orderTemp);
+                    itemTemp = orderTemp;
                     break;
             }
             result = itemPage.ShowDialog();
@@ -95,18 +96,20 @@ namespace shopApplication
                         itemList.Add(itemTemp);
                         break;
                     case "editBtn":
-                        itemListView.Items.Clear();
-                        item_func.add_all_item_to_ListViwe(itemListView, itemList,null);
+                        itemListView.SelectedItems[0].SubItems[0].Text = itemTemp.name;
+                        itemListView.SelectedItems[0].SubItems[1].Text = itemTemp.price.ToString();
+                        itemListView.SelectedItems[0].SubItems[2].Text = itemTemp.amount.ToString();
                         break;
                     default: //編輯orderListView項目
-                        orderListView.Items.Clear();
-                        item_func.add_all_item_to_ListViwe(orderListView, orderList, totalTextBox);
+                        orderListView.SelectedItems[0].SubItems[2].Text = itemTemp.amount.ToString();
+                        orderListView.SelectedItems[0].SubItems[3].Text = (itemTemp.amount * itemTemp.price).ToString();
+                        ListView_func.cal_total(orderListView, totalTextBox);
                         break;
                 }
 
                 string json = System.Text.Json.JsonSerializer.Serialize(itemList, File_func.option);
                 string path = FileName.mainDirectoryPath + '/' + FileName.productsTxtPath;
-                File_func.save_text_file(path,json);
+                File_func.save_text_file(path, json);
             }
 
         }
@@ -114,33 +117,74 @@ namespace shopApplication
         private void newOrderBtn_Click(object sender, EventArgs e)
         {
             DialogResult result;
-            NewOrderPage newOrderPage = new NewOrderPage(orderListView,totalTextBox.Text,setData);
+            NewOrderPage newOrderPage = new NewOrderPage(orderListView, totalTextBox.Text, setData);
             result = newOrderPage.ShowDialog();
 
             if (result == DialogResult.OK)
             {
-                for (int i = 0; i < orderListView.Items.Count ; i++)
+                for (int i = 0; i < orderListView.Items.Count; i++)
                 {
                     int index = item_func.find_item_index(itemList, orderListView.Items[i].SubItems[0].Text); //找到在list中的位置
-                    itemList[index].amount = itemList[index].amount - int.Parse(orderListView.Items[i].SubItems[orderListView.Columns["num"].Index].Text); //扣掉賣出數量
-
-                    string json = System.Text.Json.JsonSerializer.Serialize(itemList, File_func.option);
-                    string path = FileName.mainDirectoryPath + '/' + FileName.productsTxtPath;
-                    File_func.save_text_file(path, json); //存檔
-
-                    itemListView.Items.Clear();
-                    item_func.add_all_item_to_ListViwe(itemListView, itemList, null); //更新顯示數據
+                    itemList[index].amount = itemList[index].amount - int.Parse(orderListView.Items[i].SubItems[orderListView.Columns["itemNum"].Index].Text); //扣掉賣出數量
                 }
-            }
+                string json = System.Text.Json.JsonSerializer.Serialize(itemList, File_func.option);
+                string path = FileName.mainDirectoryPath + '/' + FileName.productsTxtPath;
+                File_func.save_text_file(path, json); //存檔
 
+                searchTextBox.Text = String.Empty;
+                itemListView.Items.Clear();
+                item_func.add_all_item_to_ListViwe(itemListView, itemList, null); //更新顯示數據
+                clearOrderList();
+            }
+        }
+
+        private void clearButton_Click(object sender, EventArgs e)
+        {
+            clearOrderList();
+        }
+
+        private void orderItemDelBtn_Click(object sender, EventArgs e)
+        {
+            orderList.RemoveAt(orderListView.SelectedItems[0].Index);
+            orderListView.SelectedItems[0].Remove();
+
+            if (orderListView.Items.Count == 0)
+            {
+                clearOrderList();
+            }
+            else
+            {
+                ListView_func.cal_total(orderListView, totalTextBox);
+            }
+        }
+
+        private void clearOrderList()
+        {
+            orderItemDelBtn.Enabled = false;
+            newOrderBtn.Enabled = false;
+            totalTextBox.Text = string.Empty;
+            orderListView.Items.Clear();
+            orderList.Clear();
+        }
+
+        private void orderListView_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (((ListView)sender).SelectedItems.Count == 0)
+            {
+                orderItemDelBtn.Enabled = false;
+            }
+            else
+            {
+                orderItemDelBtn.Enabled = true;
+            }
         }
 
         private void searchTextBox_TextChanged(object sender, EventArgs e) //搜尋
         {
             itemListView.Items.Clear();
-            if ( string.IsNullOrEmpty(searchTextBox.Text) )
+            if (string.IsNullOrEmpty(searchTextBox.Text))
             {
-                item_func.add_all_item_to_ListViwe(itemListView, itemList,null);
+                item_func.add_all_item_to_ListViwe(itemListView, itemList, null);
             }
             else
             {
@@ -148,7 +192,7 @@ namespace shopApplication
                 {
                     if (item.name.Contains(searchTextBox.Text))
                     {
-                        ListView_func.listView_add_item(item, itemListView,null);
+                        ListView_func.listView_add_item(item, itemListView, null);
                     }
                 }
             }
@@ -170,8 +214,10 @@ namespace shopApplication
                     if (itemListView.SelectedItems[0].Text.Equals(orderListView.Items[i].Text)) //若已經有的話就不再新增
                     {
                         itemListView.SelectedItems.Clear();
+                        orderListView.SelectedItems.Clear();
                         orderListView.Focus();
                         orderListView.Items[i].Selected = true;
+                        orderListView.SelectedItems[0].EnsureVisible();
                         return;
                     }
                 }
@@ -188,25 +234,16 @@ namespace shopApplication
             }
         }
 
-        private void clearButton_Click(object sender, EventArgs e)
-        {
-            newOrderBtn.Enabled = false;
-            totalTextBox.Text = "";
-            orderListView.Items.Clear();
-            orderList.Clear();
-        }
-
         private void settingBtn_Click(object sender, EventArgs e)
         {
             SettingPage settingPage = new SettingPage(setData);
             settingPage.ShowDialog();
-
-            Debug.WriteLine(setData.shopName);
         }
 
-        private void orderListView_SelectedIndexChanged(object sender, EventArgs e)
+        private void clearSearchBoxBtn_Click(object sender, EventArgs e)
         {
-            Debug.WriteLine(itemListView.SelectedItems.Count);
+            searchTextBox.Text = string.Empty;
+            searchTextBox.Focus();
         }
     }
 }
@@ -271,7 +308,7 @@ public class TextBox_func
     }
     public static void removeBlank(object sender)
     {
-        if ( sender.GetType().Name == "TextBox" )
+        if (sender.GetType().Name == "TextBox")
         {
             ((TextBox)sender).Text = ((TextBox)sender).Text.Replace(" ", "");
         }
@@ -279,7 +316,7 @@ public class TextBox_func
         {
             ((ComboBox)sender).Text = ((ComboBox)sender).Text.Replace(" ", "");
         }
-        
+
     }
 }
 
@@ -291,22 +328,23 @@ public class ListView_func
         listView.View = View.Details;
 
         int width = listView.Size.Width / 5;
-        listView.Columns.Add("產品名稱", width * 2);
-        listView.Columns.Add("價錢", width);
+        listView.Columns.Add("item", "產品名稱", width * 2);
+        listView.Columns.Add("itemPrice", "價錢", width);
 
         if (listView.Name.Equals("itemListView"))
         {
-            listView.Columns.Add(/*"num",*/"數量", -2);
+            listView.Columns.Add("itemNum", "數量", -2);
             listView.MultiSelect = false;
         }
         else
         {
-            listView.Columns.Add("num","數量", width);
-            listView.Columns.Add(/*"num",*/"價格", -2);
+            listView.Columns.Add("itemNum", "數量", width);
+            listView.Columns.Add("itemTotelPrice", "價格", -2);
         }
 
-        //listView.Columns["num"].Width = -2;
+        //listView.Columns["itemNum"].Width = -2;
         listView.FullRowSelect = true;
+        listView.Font = new Font(listView.Font.FontFamily, 12);
     }
 
     public static void listView_add_item(Item item, ListView listView, TextBox textBox)
@@ -316,7 +354,7 @@ public class ListView_func
         newItem.SubItems.Add(item.amount.ToString());
         if (listView.Name.Equals("orderListView"))
         {
-            newItem.SubItems.Add( (item.price * item.amount).ToString() );
+            newItem.SubItems.Add((item.price * item.amount).ToString());
         }
         listView.Items.Add(newItem);
 
@@ -326,7 +364,7 @@ public class ListView_func
         }
     }
 
-    private static void cal_total(ListView listView,TextBox textBox) //計算總價
+    public static void cal_total(ListView listView, TextBox textBox) //計算總價
     {
         int tot = 0;
         for (int i = 0; i < listView.Items.Count; i++)
@@ -339,7 +377,7 @@ public class ListView_func
 
 public class item_func
 {
-    public static void add_all_item_to_ListViwe(ListView listView, List<Item> itemList,TextBox textBox)
+    public static void add_all_item_to_ListViwe(ListView listView, List<Item> itemList, TextBox textBox)
     {
         foreach (Item item in itemList)
         {
@@ -347,11 +385,11 @@ public class item_func
         }
     }
 
-    public static int find_item_index(List<Item> itemList,String text) // -1 = 沒找到
+    public static int find_item_index(List<Item> itemList, String text) // -1 = 沒找到
     {
         int index = 0;
 
-        foreach (Item item in itemList )
+        foreach (Item item in itemList)
         {
             if (item.name.Equals(text))
             {

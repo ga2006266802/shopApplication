@@ -34,12 +34,13 @@ namespace shopApplication
             itemAmount.Value = itemTemp.amount;
             itemPrice.Value = itemTemp.price;
             this.Item = itemTemp;
+            itemAmount.Select(0, 1);
         }
 
         public ItemPage(Item itemTemp, Item orderTemp)
         {
             InitializeComponent();
-            this.Text = "編輯商品";
+            this.Text = "編輯訂單商品";
             this.Item = orderTemp;
             itemName.Text = itemTemp.name;
             itemName.Enabled = false;
@@ -48,6 +49,18 @@ namespace shopApplication
             itemAmount.Value = orderTemp.amount;
             itemAmount.Maximum = itemTemp.amount;
             numLabel.Text = $"最大:{itemTemp.amount}";
+            itemAmount.Minimum = 1;
+            UpDownBase upDownBase = (UpDownBase)itemAmount;
+            upDownBase.TextChanged += new System.EventHandler(upDown_ValueChanged);
+        }
+
+        private void upDown_ValueChanged(object sender, EventArgs e)
+        {
+            if (itemAmount.Value < itemAmount.Minimum) itemAmount.Value = itemAmount.Minimum;
+            if (this.Text == "編輯訂單商品")
+            {
+                if (itemAmount.Value > itemAmount.Maximum) itemAmount.Value = itemAmount.Maximum;
+            }
         }
 
         private void CaneclButton_Click(object sender, EventArgs e)
@@ -57,7 +70,7 @@ namespace shopApplication
 
         private void AcceptButton_Click(object sender, EventArgs e)
         {
-            if ( string.IsNullOrEmpty(itemName.Text.Replace(" ", "")) ||
+            if (string.IsNullOrEmpty(itemName.Text.Replace(" ", "")) ||
                 string.IsNullOrEmpty(itemPrice.Text.Replace(" ", "")) ||
                 string.IsNullOrEmpty(itemAmount.Text.Replace(" ", "")))
             {
