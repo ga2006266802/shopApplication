@@ -12,3 +12,6 @@ office excel
 生成訂單
 (訂單介面由程式資料夾下orderExample.xlsx決定可由使用者自行修改)
 ![github](https://github.com/ga2006266802/shopApplication/blob/master/demoImg/訂單範例.png)
+
+## 下載
+[shopApplication.zip](https://drive.google.com/drive/folders/1W8nDxk46M0uV_YSaxVIfKCFzqF0G5qpo?usp=sharing)
