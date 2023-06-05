@@ -3,7 +3,7 @@
 能自動產出訂單且提示目前庫存數量在數量低於警戒線時通知
 
 ## 電腦需求
-office excel
+Microsoft Excel
 
 ## 使用圖片
 主介面
