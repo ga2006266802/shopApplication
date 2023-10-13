@@ -15,6 +15,7 @@ namespace shopApplication
     {
         Item Item = new Item();
         List<Item> itemList = new List<Item>();
+        int index = -1;
 
         public ItemPage(Item itemTemp, List<Item> listTemp)
         {
@@ -25,15 +26,17 @@ namespace shopApplication
             numLabel.Visible = false;
         }
 
-        public ItemPage(Item itemTemp)
+        public ItemPage(Item itemTemp,String titel, List<Item> listTemp,int indexTemp)
         {
             InitializeComponent();
-            this.Text = "編輯商品";
+            this.Text = titel;
             numLabel.Visible = false;
             itemName.Text = itemTemp.name;
             itemAmount.Value = itemTemp.amount;
             itemPrice.Value = itemTemp.price;
+            index = indexTemp;
             this.Item = itemTemp;
+            this.itemList = listTemp;
             itemAmount.Select(0, 1);
         }
 
@@ -82,6 +85,11 @@ namespace shopApplication
                 {
                     if (item.name.Equals(itemName.Text))
                     {
+                        if ( ((index != -1) && (item.name != itemList[index].name)) || this.Text.Equals("編輯訂單商品"))
+                        {
+                            continue;
+                        }
+
                         MessageBox.Show("商品名稱重複", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }

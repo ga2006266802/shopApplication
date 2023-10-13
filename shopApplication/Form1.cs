@@ -43,6 +43,7 @@ namespace shopApplication
             {
                 Directory.CreateDirectory(FileName.mainDirectoryPath);
             }
+
         }
 
         private void useItemPage(object sender, EventArgs e)
@@ -50,6 +51,7 @@ namespace shopApplication
             DialogResult result;
             Item itemTemp = new Item();
             ItemPage itemPage;
+            int indexTemp = 0;
 
             String name;
 
@@ -67,15 +69,18 @@ namespace shopApplication
                 case "addNewItemBtn":
                     itemPage = new ItemPage(itemTemp, itemList);
                     break;
-                case "editBtn":
-                    if (itemListView.SelectedItems.Count == 0)
-                    {
-                        MessageBox.Show("請選擇項目", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        return;
-                    }
-
-                    itemTemp = itemList[item_func.find_item_index(itemList, itemListView.SelectedItems[0].Text)];
-                    itemPage = new ItemPage(itemTemp);
+                case "copyItemBtn":
+                    indexTemp = item_func.find_item_index(itemList, itemListView.SelectedItems[0].Text);
+                    Item itemCopy = itemList[indexTemp];
+                    itemTemp.price = itemCopy.price;
+                    itemTemp.amount = itemCopy.amount;
+                    itemTemp.name = itemCopy.name;
+                    itemPage = new ItemPage(itemTemp, "複製商品編輯", itemList, indexTemp);
+                    break;
+                case "itemListView":
+                    indexTemp = item_func.find_item_index(itemList, itemListView.SelectedItems[0].Text);
+                    itemTemp = itemList[indexTemp];
+                    itemPage = new ItemPage(itemTemp, "編輯商品", itemList,indexTemp);
                     break;
                 default: //編輯orderListView項目
                     itemTemp = itemList[item_func.find_item_index(itemList, orderListView.SelectedItems[0].Text)];
@@ -92,10 +97,11 @@ namespace shopApplication
                 switch (name)
                 {
                     case "addNewItemBtn":
+                    case "copyItemBtn":
                         ListView_func.listView_add_item(itemTemp, itemListView, null);
                         itemList.Add(itemTemp);
                         break;
-                    case "editBtn":
+                    case "itemListView":
                         itemListView.SelectedItems[0].SubItems[0].Text = itemTemp.name;
                         itemListView.SelectedItems[0].SubItems[1].Text = itemTemp.price.ToString();
                         itemListView.SelectedItems[0].SubItems[2].Text = itemTemp.amount.ToString();
@@ -156,6 +162,15 @@ namespace shopApplication
             {
                 ListView_func.cal_total(orderListView, totalTextBox);
             }
+            orderItemDelBtn.Enabled = false;
+        }
+
+        private void tempBtn_Click(object sender, EventArgs e)
+        {
+            Item itemTemp = new Item();
+            ItemPage itemPage;
+            itemPage = new ItemPage(itemTemp, itemList);
+            itemPage.ShowDialog();
         }
 
         private void clearOrderList()
@@ -200,6 +215,26 @@ namespace shopApplication
 
         private void itemListView_DoubleClick(object sender, EventArgs e) //選中項目放入新建訂單欄目
         {
+            useItemPage((ListView)sender, e);
+        }
+
+        private void settingBtn_Click(object sender, EventArgs e)
+        {
+            SettingPage settingPage = new SettingPage(setData);
+            settingPage.ShowDialog();
+        }
+
+        private void clearSearchBoxBtn_Click(object sender, EventArgs e)
+        {
+            searchTextBox.Text = string.Empty;
+            searchTextBox.Focus();
+        }
+
+        private void addItemOrderListToBtn_Click(object sender, EventArgs e)//選中項目放入新建訂單欄目
+        {
+            addItemToOrderListBtn.Enabled = false;
+            copyItemBtn.Enabled = false;
+
             if ((int.Parse(itemListView.SelectedItems[0].SubItems[2].Text)) == 0)
             {
                 MessageBox.Show("沒有庫存", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -229,21 +264,24 @@ namespace shopApplication
                     orderList.Add(itemTemp);
                     ListView_func.listView_add_item(itemTemp, orderListView, totalTextBox);
                     newOrderBtn.Enabled = true;
+                    itemListView.SelectedItems.Clear();
                     return;
                 }
             }
         }
 
-        private void settingBtn_Click(object sender, EventArgs e)
+        private void itemListView_MouseUp(object sender, MouseEventArgs e)
         {
-            SettingPage settingPage = new SettingPage(setData);
-            settingPage.ShowDialog();
-        }
-
-        private void clearSearchBoxBtn_Click(object sender, EventArgs e)
-        {
-            searchTextBox.Text = string.Empty;
-            searchTextBox.Focus();
+            if (((ListView)sender).SelectedItems.Count == 0)
+            {
+                addItemToOrderListBtn.Enabled = false;
+                copyItemBtn.Enabled = false;
+            }
+            else
+            {
+                addItemToOrderListBtn.Enabled = true;
+                copyItemBtn.Enabled = true;
+            }
         }
     }
 }

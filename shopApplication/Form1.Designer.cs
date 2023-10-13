@@ -36,10 +36,12 @@
             addNewItemBtn = new Button();
             clearBtn = new Button();
             newOrderBtn = new Button();
-            editBtn = new Button();
             settingBtn = new Button();
             clearSearchBoxBtn = new Button();
             orderItemDelBtn = new Button();
+            addItemToOrderListBtn = new Button();
+            tempBtn = new Button();
+            copyItemBtn = new Button();
             SuspendLayout();
             // 
             // itemListView
@@ -51,6 +53,7 @@
             itemListView.TabIndex = 0;
             itemListView.UseCompatibleStateImageBehavior = false;
             itemListView.DoubleClick += itemListView_DoubleClick;
+            itemListView.MouseUp += itemListView_MouseUp;
             // 
             // orderListView
             // 
@@ -103,7 +106,7 @@
             // 
             // clearBtn
             // 
-            clearBtn.Location = new Point(1412, 720);
+            clearBtn.Location = new Point(1412, 587);
             clearBtn.Name = "clearBtn";
             clearBtn.Size = new Size(150, 46);
             clearBtn.TabIndex = 6;
@@ -120,16 +123,6 @@
             newOrderBtn.Text = "新增訂單";
             newOrderBtn.UseVisualStyleBackColor = true;
             newOrderBtn.Click += newOrderBtn_Click;
-            // 
-            // editBtn
-            // 
-            editBtn.Location = new Point(168, 716);
-            editBtn.Name = "editBtn";
-            editBtn.Size = new Size(150, 46);
-            editBtn.TabIndex = 8;
-            editBtn.Text = "編輯項目";
-            editBtn.UseVisualStyleBackColor = true;
-            editBtn.Click += useItemPage;
             // 
             // settingBtn
             // 
@@ -154,23 +147,56 @@
             // orderItemDelBtn
             // 
             orderItemDelBtn.Enabled = false;
-            orderItemDelBtn.Location = new Point(862, 587);
+            orderItemDelBtn.Location = new Point(718, 495);
             orderItemDelBtn.Name = "orderItemDelBtn";
-            orderItemDelBtn.Size = new Size(150, 46);
+            orderItemDelBtn.Size = new Size(138, 138);
             orderItemDelBtn.TabIndex = 11;
-            orderItemDelBtn.Text = "刪除";
+            orderItemDelBtn.Text = "<";
             orderItemDelBtn.UseVisualStyleBackColor = true;
             orderItemDelBtn.Click += orderItemDelBtn_Click;
+            // 
+            // addItemToOrderListBtn
+            // 
+            addItemToOrderListBtn.Enabled = false;
+            addItemToOrderListBtn.Location = new Point(718, 80);
+            addItemToOrderListBtn.Name = "addItemToOrderListBtn";
+            addItemToOrderListBtn.Size = new Size(138, 138);
+            addItemToOrderListBtn.TabIndex = 12;
+            addItemToOrderListBtn.Text = ">";
+            addItemToOrderListBtn.UseVisualStyleBackColor = true;
+            addItemToOrderListBtn.Click += addItemOrderListToBtn_Click;
+            // 
+            // tempBtn
+            // 
+            tempBtn.Location = new Point(862, 587);
+            tempBtn.Name = "tempBtn";
+            tempBtn.Size = new Size(178, 46);
+            tempBtn.TabIndex = 13;
+            tempBtn.Text = "新增臨時項目";
+            tempBtn.UseVisualStyleBackColor = true;
+            tempBtn.Click += tempBtn_Click;
+            // 
+            // copyItemBtn
+            // 
+            copyItemBtn.Location = new Point(168, 716);
+            copyItemBtn.Name = "copyItemBtn";
+            copyItemBtn.Size = new Size(150, 46);
+            copyItemBtn.TabIndex = 14;
+            copyItemBtn.Text = "複製項目";
+            copyItemBtn.UseVisualStyleBackColor = true;
+            copyItemBtn.Click += useItemPage;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(14F, 30F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1574, 778);
+            Controls.Add(copyItemBtn);
+            Controls.Add(tempBtn);
+            Controls.Add(addItemToOrderListBtn);
             Controls.Add(orderItemDelBtn);
             Controls.Add(clearSearchBoxBtn);
             Controls.Add(settingBtn);
-            Controls.Add(editBtn);
             Controls.Add(newOrderBtn);
             Controls.Add(clearBtn);
             Controls.Add(addNewItemBtn);
@@ -194,10 +220,12 @@
         private TextBox totalTextBox;
         private Button addNewItemBtn;
         private Button newOrderBtn;
-        private Button editBtn;
         private Button settingBtn;
         private Button clearBtn;
         private Button clearSearchBoxBtn;
         private Button orderItemDelBtn;
+        private Button addItemToOrderListBtn;
+        private Button tempBtn;
+        private Button copyItemBtn;
     }
 }

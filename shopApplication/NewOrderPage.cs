@@ -44,7 +44,7 @@ namespace shopApplication
                 Directory.CreateDirectory(FileName.customersDirectoryPath);
             }
 
-            customersComBox_refresh();
+            customersComBox_upData();
 
         }
 
@@ -69,7 +69,7 @@ namespace shopApplication
                     if (ws.Cells[RowIndex, ColIndex].Value != null)
                     {
                         string cellValue = ws.Cells[RowIndex, ColIndex].Value.ToString();
-                        if (cellValue.Contains('<') && cellValue.Contains('>') /*cellValue.First().Equals('<') && cellValue.Last().Equals('>')*/)
+                        if (cellValue.Contains('<') && cellValue.Contains('>') )
                         {
                             cellValue = cellValue.Substring(cellValue.IndexOf('<'), cellValue.IndexOf('>') - cellValue.IndexOf('<'));
                             cellValue = cellValue.Replace("<", String.Empty);
@@ -102,7 +102,7 @@ namespace shopApplication
                                 case "amount":
                                     cellValue = totalTextBox.Text;
                                     break;
-                                default:
+                                default: //名稱、價錢等動態欄位
                                     string[] temp = cellValue.Split(' ');
                                     if (int.Parse(temp.Last()) > orderListView.Items.Count)
                                     {
@@ -110,7 +110,7 @@ namespace shopApplication
                                     }
                                     else
                                     {
-                                        cellValue = orderListView.Items[(int.Parse(temp.Last()) - 1)].SubItems[orderListView.Columns[temp.First()].DisplayIndex].Text;
+                                        cellValue = orderListView.Items[(int.Parse(temp.Last()) - 1)]. SubItems[orderListView.Columns[temp.First()]. DisplayIndex].Text;
                                     }
                                     break;
                             }
@@ -184,7 +184,7 @@ namespace shopApplication
             this.Close();
         }
 
-        private void customersComBox_refresh()
+        private void customersComBox_upData()
         {
             customersComboBox.Items.Clear();
 
